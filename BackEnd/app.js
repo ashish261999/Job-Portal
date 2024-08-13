@@ -2,7 +2,7 @@ import express from "express";
 
 const app= express();
 
-const PORT =8090;
+const PORT =8080;
 
 app.listen(PORT , ()=>{
     console.log(`Server running at port number -> ${PORT}`)
