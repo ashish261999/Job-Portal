@@ -2,6 +2,10 @@ import express from "express";
 import cros from "cors";
 import cookieParser from "cookie-parser";
 import bodyParser from "body-parser";
+import dotenv from "dotenv";
+import connectDB from "./Util/db.js";
+
+dotenv.config({});
 
 
 
@@ -31,8 +35,9 @@ app.get("/home" ,(req, res)=>{
     })
 })
 
-const PORT =8080;
+const PORT =process.env.PORT;
 
 app.listen(PORT , ()=>{
+    connectDB();
     console.log(`Server running at port number -> ${PORT}`)
 })
