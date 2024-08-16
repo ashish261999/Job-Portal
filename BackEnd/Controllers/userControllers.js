@@ -47,13 +47,6 @@ export const registor = async (req, res) => {
   }
 };
 
-
-
-
-
-
-
-
 // This is for  controller /business logic for the Login --------------
 
 export const logIn = async (req, res) => {
@@ -137,20 +130,80 @@ export const logIn = async (req, res) => {
   }
 };
 
-
-
-
-
 // This is for  controller /business logic for the Logout --------------
 
-export const logOut = async (req, res)=>{
-    try {
-        //Removing/deleting cooking -------
-        return res.status(200).cookie("token", "" ,{maxAge: 0}).json({
-            message:"Logged out suceessfully...",
-            sucess:true
-        })
-    } catch (error) {
-        console.log(error)
+export const logOut = async (req, res) => {
+  try {
+    //Removing/deleting cooking -------
+    return res.status(200).cookie("token", "", { maxAge: 0 }).json({
+      message: "Logged out suceessfully...",
+      sucess: true,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+// This is for  controller /business Update for the Logout --------------
+
+export const updateProfile = async (req, res) => {
+  try {
+    //Lets call all the value here in variable---------
+
+    const { fullName, email, phoneNumber, bio, skills } = req.body;
+
+    // If any of the field is vacant/missing then ------
+
+    if (!fullName || !email || !phoneNumber || !bio || !skills) {
+      return res.status(400).json({
+        message: "Something is missing !",
+        success: false,
+      });
     }
-}
+
+    // Now converting skills string to Array-------
+
+    const skillsArray = skills.split(",");
+
+    //Fetching id for autheneication-------
+
+    const userId = req.id;
+
+    let user = User.findById(userId);
+
+    //Updating Data----------------------
+
+    (user.fullName = fullName),
+    (user.email = email),
+    (user.phoneNumber = phoneNumber),
+    (user.profile.bio = bio),
+    (user.profile.skills = skillsArray);
+
+
+    //Resume and profile pic will add later while using cloudenary.....
+
+    // Saving Data------------------------
+    
+    await user.save();
+
+    //creating uer --------------------------
+
+    user = {
+      _id :user._id,
+      fullName:user.fullName,
+      email:user.email,
+      phoneNumber :user.phoneNumber,
+      role:user.role,
+      profile:user.profile
+
+    }
+      return res.status(200).json({
+        message:"Profile updated sucessfully!",
+        user,
+        success:true
+      });
+
+  } catch (error) {
+    console.log(error);
+  }
+};
