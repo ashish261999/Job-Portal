@@ -1,10 +1,10 @@
 import { User } from "../Models/userModel.js";
-import bcrypt from "bcryptjs";
+import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
 // This is for  controller /business logic for the Registor --------------
 
-export const registor = async (req, res) => {
+export const register = async (req, res) => {
   try {
     //Lets call all the value here in variable---------
 
@@ -57,7 +57,7 @@ export const logIn = async (req, res) => {
 
     // If any of the field is vacant/missing then ------
 
-    if (!email || !phoneNumber || !role) {
+    if (!email || !password || !role) {
       return res.status(400).json({
         message: "Something is missing !",
         success: false,
@@ -152,57 +152,64 @@ export const updateProfile = async (req, res) => {
 
     const { fullName, email, phoneNumber, bio, skills } = req.body;
 
-    // If any of the field is vacant/missing then ------
-
-    if (!fullName || !email || !phoneNumber || !bio || !skills) {
-      return res.status(400).json({
-        message: "Something is missing !",
-        success: false,
-      });
-    }
-
     // Now converting skills string to Array-------
-
-    const skillsArray = skills.split(",");
-
+    let skillsArray;
+    if (skills) {
+      skillsArray = skills.split(",");
+    }
     //Fetching id for autheneication-------
 
     const userId = req.id;
 
-    let user = User.findById(userId);
+   let user = await User.findById(userId);
+   
+  
+
+    if (!user) {
+      return res.status(400).json({
+        message: "User not found...",
+        success: false,
+      });
+    };
 
     //Updating Data----------------------
 
-    (user.fullName = fullName),
-    (user.email = email),
-    (user.phoneNumber = phoneNumber),
-    (user.profile.bio = bio),
-    (user.profile.skills = skillsArray);
+    if (fullName) {
+      user.fullName = fullName;
+    }
+    if (email) {
+      user.email = email;
+    }
 
-
-    //Resume and profile pic will add later while using cloudenary.....
+    if (phoneNumber) {
+      user.phoneNumber = phoneNumber;
+    }
+    if (bio) {
+      user.profile.bio = bio;
+    }
+    if (bio) {
+      user.profile.skills = skillsArray;
+    }
 
     // Saving Data------------------------
-    
+
     await user.save();
 
     //creating uer --------------------------
 
     user = {
-      _id :user._id,
-      fullName:user.fullName,
-      email:user.email,
-      phoneNumber :user.phoneNumber,
-      role:user.role,
-      profile:user.profile
-
-    }
-      return res.status(200).json({
-        message:"Profile updated sucessfully!",
-        user,
-        success:true
-      });
-
+      _id: user._id,
+      fullName: user.fullName,
+      email: user.email,
+      phoneNumber: user.phoneNumber,
+      role: user.role,
+      profile: user.profile,
+    };
+    return res.status(200).json({
+      message: "Profile updated sucessfully!",
+      user,
+      success: true,
+    });
   } catch (error) {
     console.log(error);
   }

@@ -4,6 +4,7 @@ import cookieParser from "cookie-parser";
 import bodyParser from "body-parser";
 import dotenv from "dotenv";
 import connectDB from "./Util/db.js";
+import userRouter from "./Routes/userRoutes.js"
 
 dotenv.config({});
 
@@ -30,6 +31,9 @@ app.get("/home", (req, res) => {
     success: true,
   });
 });
+
+
+app.use("/api/user",userRouter)
 
 const PORT = process.env.PORT;
 
