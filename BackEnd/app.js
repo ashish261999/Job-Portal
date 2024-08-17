@@ -4,7 +4,8 @@ import cookieParser from "cookie-parser";
 import bodyParser from "body-parser";
 import dotenv from "dotenv";
 import connectDB from "./Util/db.js";
-import userRouter from "./Routes/userRoutes.js"
+import userRouter from "./Routes/userRoutes.js";
+import companyRouter  from "./Routes/companyRoutes.js";
 
 dotenv.config({});
 
@@ -33,7 +34,8 @@ app.get("/home", (req, res) => {
 });
 
 
-app.use("/api/user",userRouter)
+app.use("/api/user",userRouter);
+app.use("/api/company",companyRouter);
 
 const PORT = process.env.PORT;
 
