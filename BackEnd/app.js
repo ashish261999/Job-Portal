@@ -1,11 +1,11 @@
 import express from "express";
 import cros from "cors";
 import cookieParser from "cookie-parser";
-import bodyParser from "body-parser";
 import dotenv from "dotenv";
 import connectDB from "./Util/db.js";
 import userRouter from "./Routes/userRoutes.js";
 import companyRouter  from "./Routes/companyRoutes.js";
+import jobRouter from "./Routes/jobRoutes.js";
 
 dotenv.config({});
 
@@ -36,6 +36,7 @@ app.get("/home", (req, res) => {
 
 app.use("/api/user",userRouter);
 app.use("/api/company",companyRouter);
+app.use("/api/job" , jobRouter);
 
 const PORT = process.env.PORT;
 
